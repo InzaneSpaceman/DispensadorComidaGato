@@ -1,0 +1,80 @@
+//DESPUÉS DE QUE EL SENSOR DE COLOR HAYA DETECTADO AL GATO, ESTE DEBE AUTORIZAR QUE EL MECANISMO CONTINUE
+
+#define sensorPin A0 // Escoger el input de entrada (para PIR)  
+
+#define G_led 8 // Pin para led verde
+#define R_led 9 // Pin para led rojo 
+
+#define in1 2  
+#define in2 3  
+
+int set_timer=5;
+
+int sensor =0;
+int seconds =0;
+int flag=0;
+long delay_Start;
+
+void setup(){ 
+
+  Serial.begin(9600);
+
+  pinMode(sensorPin, INPUT); // Sensor como entr
+
+  pinMode(R_led,OUTPUT); // Led rojo como salida
+  pinMode(G_led,OUTPUT); // led verde como salida
+
+  pinMode(in1,OUTPUT); 
+  pinMode(in2,OUTPUT); 
+
+      digitalWrite(in1, LOW); // Compuerta abierta 
+      digitalWrite(in2, HIGH);// Compuerta cerrada
+    delay(2000);
+
+      digitalWrite(in1, LOW); // Compuerta abierta 
+      digitalWrite(in2, LOW); // Compuerta cerrada
+}
+
+void loop(){
+sensor = digitalRead(sensorPin);
+
+  if(sensor==1){ // pin state change: 0 -> 1
+      Serial.println("Motion detected!");
+      digitalWrite(R_led, HIGH); // Encerder LED Rojo
+      digitalWrite(G_led, HIGH); // Encencder LED verde
+
+  if(flag==0){
+      digitalWrite(in1, HIGH);// Compuerta abierta 
+      digitalWrite(in2, LOW); // Compuerta cerrada 
+  delay(2000);
+      digitalWrite(in1, LOW); // Compuerta abierta
+      digitalWrite(in2, LOW); // Compuerta cerrada 
+}
+
+seconds=0;
+flag=1;
+    delay_Start = millis(); // Acá se establece el timepo de inicio
+    }else{ // pin state change: 1 -> 0
+  Serial.println("Motion stopped!");
+    digitalWrite(G_led, LOW); // LED verde apagado. 
+}
+
+  if((flag==1) && (millis()- delay_Start) > 999){ 
+      seconds = seconds+1;  
+      delay_Start = millis(); // establecer el tiempo de inicio
+}
+
+  if(seconds>set_timer){
+      digitalWrite(R_led, LOW); // LED rojo apagado.   
+
+digitalWrite(in1, LOW); // Compuerta abierta  
+digitalWrite(in2, HIGH);// Compuerta cerrada 
+delay(2000);
+digitalWrite(in1, LOW); // Compuerta abierta  
+digitalWrite(in2, LOW); // Compuerta cerrada 
+flag=0;
+seconds=0; 
+}
+
+delay(100);
+}
