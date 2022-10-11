@@ -1,0 +1,43 @@
+//El proposito de la báscula es poder calcular la carga de alimento dispensado, aunque sería un tema dificil de calibrar porque no sabemos que acciones pueda
+//Realizar el gato antes y durante la dispensación de comida, sin embargo, se está suponiendo la situación ideal
+
+#include "HX711.h"
+ 
+// Pin de datos y de reloj
+    //CAMBIAR PINES DE ENTRADA PORQUE CREO QUE CHOCA CON ALGÚN SENSOR
+byte pinData = 3;
+byte pinClk = 2;
+ 
+HX711 bascula;
+ 
+// Parámetro para calibrar el peso y el sensor
+float factor_calibracion = 20780.0; // ESTE FACTOR DE CALIBRACIÓN DEBE SER PROBADO POR DISPOSITIVO
+                                    // YA QUE ASI CALIBRAMOS LA CANTIDAD DE ALIMENTO QUE SE DISPENSARÁ
+ 
+ // OPCIONALMENTE AGREGAR UNA PANTALLA, ESTO PUEDE SER REMPLAZADOR POR EL MONITOR DE ARDUINO, TAMBIEN PIENSO EN REPRESENTARLO EN LA APP 
+ // AUNQUE NO SÉ COMO HACER ESO JAJASK
+ 
+void setup() {
+  Serial.begin(9600);
+  Serial.println("HX711 programa de calibracion");
+  Serial.println("Quita cualquier peso de la bascula");
+  Serial.println("Una vez empiece a mostrar informacion de medidas, coloca un peso conocido encima de la bascula");
+  Serial.println("Presiona + para incrementar el factor de calibracion");
+  Serial.println("Presiona - para disminuir el factor de calibracion");
+ 
+  // Iniciar sensor
+  bascula.begin(pinData, pinClk);
+ 
+  // Aplicar la calibración
+  bascula.set_scale();
+  // Iniciar la tara
+  // No tiene que haber nada sobre el peso
+  bascula.tare();
+ 
+  // Obtener una lectura de referencia
+  long zero_factor = bascula.read_average();
+  // Mostrar la primera desviación
+  Serial.print("Zero factor: ");
+  Serial.println(zero_factor);
+}
+
