@@ -1,0 +1,41 @@
+//Después de establecer una conexión por bluetooth usando MIT AppInventor
+ 
+
+char val;
+// Define entradas, RECUERDA LEDs como prueba
+  int ledPin12 = 12; 
+  int ledPin13 = 13;
+
+void setup() { 
+  Serial.begin(9600); // Aqui establecemos la velocidad NOTA debe ser la misma en los otros códigos
+   pinMode(ledPin12, OUTPUT); 
+    pinMode(ledPin13, OUTPUT); 
+}
+
+  void loop() { 
+    if( Serial.available() ) {
+      val = Serial.read();
+
+//SISTEMA DE "if" PARA SINCORNIZAR-CALIBRAR-GUARDAR LA INFORMACIÓN DEL GATO 
+
+    if( val == '0' ) //SI NO ES EL COLOR
+{ 
+      digitalWrite(ledPin12, LOW); // NO SE ACTIVA
+}
+
+    if( val == '1' )
+{ 
+      digitalWrite(ledPin12, HIGH); //SÍ SE ACTIVA
+} 
+    //SI EL GATO ESTÁ PRESENTE
+    if( val == '2' )
+{ 
+      digitalWrite(ledPin13, LOW); //COMPUERTA SE ABRE
+}
+
+    if( val == '3' )
+{ 
+      digitalWrite(ledPin13, HIGH); //COMPUERTA SE CIERRA
+} 
+} 
+}
