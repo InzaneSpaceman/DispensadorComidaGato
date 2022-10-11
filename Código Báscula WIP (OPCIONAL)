@@ -1,0 +1,27 @@
+//VOLVER A DEFINIR LAS BIBLIOTECAS Y LOS INTs
+
+void loop() {
+ 
+  // Aplicar calibración
+  bascula.set_scale(factor_calibracion);
+ 
+  // Mostrar la información para ajustar el factor de calibración
+  Serial.print("Leyendo: ");
+  Serial.print(bascula.get_units(), 1);
+  Serial.print(" kgs");
+  Serial.print(" factor_calibracion: ");
+  Serial.print(factor_calibracion);
+  Serial.println();
+ 
+  // Obtener información desde el monitor serie
+  if (Serial.available())
+  {
+    char temp = Serial.read();
+    if (temp == '+')
+      factor_calibracion += 10;
+    else if (temp == '-')
+      factor_calibracion -= 10;
+  }
+}
+
+// DESDE AQUÍ HACER QUE LA COMPUERTA CIERRE
